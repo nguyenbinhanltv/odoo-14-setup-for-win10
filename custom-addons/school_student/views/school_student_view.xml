@@ -7,6 +7,8 @@
             <tree>
                 <field name="name"/>
                 <field name="school_id"/>
+                <field name="hobby_list"/>
+                <field name="is_virtual_school"/>
             </tree>
         </field>
     </record>
@@ -20,10 +22,34 @@
                     <group>
                         <field name="name"/>
                         <field name="school_id"/>
+                        <field name="school_address"/>
+                        <field name="hobby_list" widget="many2many_checkboxes"/>
                     </group>
                 </group>
             </form>
         </field>
+    </record>
+
+    <record id="hobby_list" model="ir.ui.view">
+        <field name="name">hobby list</field>
+        <field name="model">hobby</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hobby_form">
+      <field name="name">hobby form</field>
+      <field name="model">hobby</field>
+      <field name="arch" type="xml">
+        <form>
+          <group>
+            <field name="name" />
+          </group>
+        </form>
+      </field>
     </record>
 
     <record id="school_extend_form" model="ir.ui.view">
@@ -32,7 +58,16 @@
         <field name="inherit_id" ref="school.school_form_view"/>
         <field name="arch" type="xml">
             <field name="school_description" position="after">
-                <field name="school_list" />
+                <field name="school_list">
+                    <tree editable="top">
+                        <field name="name"/>
+                    </tree>
+                    <form>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </form>
+                </field>
             </field>
         </field>
     </record>
@@ -41,6 +76,12 @@
         <field name="name">School Student Window</field>
         <field name="res_model">school.student</field>
         <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="hobby_action_window">
+      <field name="name">Hobby</field>
+      <field name="res_model">hobby</field>
+      <field name="view_mode">tree,form</field>
     </record>
 
     <record model="ir.actions.server" id="school_student.action_server">
@@ -71,5 +112,7 @@
               action="school_student.action_window"/>
     <menuitem name="Server to list" id="school_student" parent="school_student.menu_2"
               action="school_student.action_server"/>
+    <menuitem name="Hobby" id="hobby_student" parent="school_student.menu_2"
+              action="school_student.hobby_action_window"/>
 
 </odoo>

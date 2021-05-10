@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import fields, models, api
 
 class SchoolProfile(models.Model):
     _name = "school.profile"
@@ -20,3 +20,14 @@ class SchoolProfile(models.Model):
     documents_name = fields.Char(string="File name")
     school_image = fields.Image(string="Upload School Image", max_width=100, max_height=100)
     school_description = fields.Html(string="Description")
+    auto_rank = fields.Integer(compute="_auto_rank_populate", string="Auto rank", store=True)
+
+    @api.depends("school_type")
+    def _auto_rank_populate(self):
+        for rec in self:
+            if rec.school_type == "private":
+                rec.auto_rank = 50
+            elif rec.school_type == "public":
+                rec.auto_rank = 100
+            else:
+                rec.auto_rank = 0
